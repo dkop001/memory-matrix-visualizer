@@ -55,20 +55,29 @@
         </div>
     </div>
 
-    <!-- Core Dependencies (Load first to avoid AMD conflicts) -->
-    <script id="babel-script" src="babel.min.js"></script>
+    <!-- Core Dependencies -->
+    <script>
+        // Emergency Babel Protection: Prevent Monaco/AMD from hijacking Babel
+        window.__define = window.define;
+        window.define = undefined;
+    </script>
+    
+    <script id="babel-script" src="babel.min.js?v=1.0.1" onerror="console.warn('Local Babel failed, using CDN fallback'); var s = document.createElement('script'); s.src='https://unpkg.com/@babel/standalone/babel.min.js'; document.head.appendChild(s);"></script>
     <script src="three.min.js"></script>
     <script src="OrbitControls.js"></script>
     <script src="gsap.min.js"></script>
 
     <script>
+        // Restore define for Monaco
+        window.define = window.__define;
+        
         var require = { paths: { vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs' } };
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/loader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/editor/editor.main.nls.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.44.0/min/vs/editor/editor.main.min.js"></script>
 
-    <!-- Project Scripts (Loaded in order) -->
+    <!-- Project Scripts -->
     <script src="instrumenter.js"></script>
     <script src="visualizer.js"></script>
     <script src="main.js"></script>

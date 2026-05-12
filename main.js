@@ -39,18 +39,25 @@ function checkBabelStatus() {
     const maxAttempts = 60;
 
     const interval = setInterval(() => {
-        const babel = window.Babel || (typeof Babel !== 'undefined' ? Babel : null);
+        // Check global window.Babel
+        let babel = window.Babel || (typeof Babel !== 'undefined' ? Babel : null);
+        
+        // If not found, check if it was loaded as an AMD module by accident
+        if (!babel && window.require && window.require.specified && window.require.specified('babel')) {
+            log('Notice: Babel detected as AMD module. Attempting to extract...');
+            try { babel = window.require('babel'); } catch(e) {}
+        }
+
         if (babel) {
+            window.Babel = babel; // Ensure it's on window for other scripts
             log('Babel detected successfully');
             statusText.innerHTML = '<span style="color: #00f2ff">System Ready</span>';
             clearInterval(interval);
         } else {
             attempts++;
-            if (attempts === 1) {
-                if (window.define && window.define.amd) log('WARNING: AMD loader (Monaco) detected. Conflict possible.');
-            }
             if (attempts % 10 === 0) log(`Check attempt ${attempts}/${maxAttempts}...`);
             statusText.innerText = `Initializing Babel (${attempts}/${maxAttempts})...`;
+            
             if (attempts >= maxAttempts) {
                 log('CRITICAL: Babel failed to load after 30s');
                 statusText.innerHTML = 'Babel failed. <button onclick="location.reload()" style="background: none; border: 1px solid #ff4d4d; color: #ff4d4d; cursor: pointer; padding: 2px 5px; font-size: 0.6rem; margin-left: 5px;">RELOAD</button>';
