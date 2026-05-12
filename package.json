@@ -1,0 +1,13 @@
+{
+  "name": "memory-matrix-visualizer",
+  "version": "1.0.0",
+  "description": "3D Code Execution Visualizer",
+  "main": "main.js",
+  "scripts": {
+    "start": "npx serve .",
+    "test": "echo \"Error: no test msg\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

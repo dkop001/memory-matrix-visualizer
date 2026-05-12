@@ -1,0 +1,6 @@
+services:
+  - type: static
+    name: memory-matrix-visualizer
+    env: static
+    buildCommand: ""
+    publishPath: "."
